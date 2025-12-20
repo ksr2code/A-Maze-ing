@@ -1,10 +1,8 @@
-# WSEN
-# 0000
-#      N
-#     ╭─╮
-#   W │ │ E
-#     ╰─╯
-#      S
+"""
+Visualizer for the project
+
+This will display the maze to stdout
+"""
 
 from enum import StrEnum
 from sys import stdout
@@ -42,92 +40,50 @@ class Cursor(StrEnum):
     Load = "8"
 
 
-class Cell:
+class Point:
+    def __init__(self, x, y) -> None:
+        self.x = x
+        self.y = y
 
+
+class Cell(Point):
     def __init__(self, x, y, walls=0) -> None:
-        self._x = x
-        self._y = y
-        self._walls = walls
+        super().__init__(x, y)
+        self.walls = walls
 
-    def set_walls(self, walls: int | str):
-        if isinstance(walls, int):
-            if walls < 0 or walls > 15:
-                raise ValueError("Invalid number")
-            self._walls = walls
-        elif isinstance(walls, str):
-            walls = walls.upper()
-            if len(walls) > 4:
-                raise ValueError("Invalid string length")
-            if set(walls).difference(set("NEWS")):
-                raise ValueError("Invalid coordinates ('N', 'E', 'S', 'W').")
-            for coord in walls:
-                match coord:
-                    case "N":
-                        self._walls |= 1 << 0
-                    case "E":
-                        self._walls |= 1 << 1
-                    case "S":
-                        self._walls |= 1 << 2
-                    case "W":
-                        self._walls |= 1 << 3
 
-    def draw_walls(self, color: Color = Color.Default):
-        ESC = "\x1b"
-        CSI = ESC + "["
+class Maze:
 
-        stdout.write(ESC + Cursor.Save)  # Save cursor position
-        if self._walls == 0:
-            return " "
-        if color != Color.Default:
-            stdout.write(CSI + color)
-        if (self._walls >> 0) & 1:  # North
-            stdout.write(
-                "".join(
+    def __init__(self) -> None:
+        self.maze: list[list[Cell]]
+        self.start: Point
+        self.end: Point
+        self.path: list[str]
+
+    def read(self, file: str) -> None:
+        maze: list[list[Cell]] = []
+        with open(file, "r") as fp:
+            for y, line in enumerate(fp):
+                if line == "\n":
+                    break
+                maze.append(
                     [
-                        CSI + Cursor.Up,
-                        "─",
-                    ],
+                        Cell(
+                            x,
+                            y,
+                            int(c, 16),
+                        )
+                        for x, c in enumerate(line.strip())
+                    ]
                 )
-            )
-        if (self._walls >> 1) & 1:  # East
-            stdout.write(
-                "".join(
-                    [
-                        ESC + Cursor.Load,
-                        CSI + Cursor.Right,
-                        "│",
-                    ],
-                )
-            )
-        if (self._walls >> 2) & 1:  # South
-            stdout.write(
-                "".join(
-                    [
-                        ESC + Cursor.Load,
-                        CSI + Cursor.Down,
-                        "─",
-                    ],
-                )
-            )
-        if (self._walls >> 3) & 1:  # West
-            stdout.write(
-                "".join(
-                    [
-                        ESC + Cursor.Load,
-                        CSI + Cursor.Left,
-                        "│",
-                    ],
-                )
-            )
-            stdout.write(CSI + Color.Reset)
-
-    def __str__(self) -> str:
-        return hex(self._walls)[2:].upper()
+            start = Point(*(int(x) for x in fp.readline().strip().split(",")))
+            end = Point(*(int(x) for x in fp.readline().strip().split(",")))
+            path = [c for c in fp.readline().strip()]
+        self.maze = maze
+        self.start = start
+        self.end = end
+        self.path = path
 
 
-cell = Cell(1, 3)
-cell.set_walls("NESW")
-stdout.write("1xxxxxxxxx\n" "2xxxxxxxxx\n" "3xxxxxxxxx\n" "4xxxxxxxxx\n" "5xxxxxxxxx")
-stdout.write("\x1b[2A\x1b[6D")
-cell.draw_walls()
-print()
+maze = Maze()
+maze.read("output_maze.txt")
