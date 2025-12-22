@@ -4,6 +4,8 @@ Main module
 """
 
 from sys import argv
+import parser
+import visualizer
 
 
 def a_maze_ing(argv: list[str]):
