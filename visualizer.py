@@ -5,6 +5,8 @@ This will display the maze to stdout
 Ref: https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 """
 
+from os import PathLike
+from typing import Union
 from enum import StrEnum
 from shutil import get_terminal_size
 from sys import stdout
@@ -122,7 +124,7 @@ class Visualizer:
         self.wall_color: Color
         self.path_color: Color
 
-    def read(self, file: str) -> None:
+    def read(self, file: Union[str, PathLike]) -> None:
         maze: list[list[Cell]] = []
         with open(file, "r") as fp:
             for y, line in enumerate(fp):
@@ -260,8 +262,3 @@ class Visualizer:
         cursor.move_to(0, term.height - 1)
         input("Enter to exit...")
         term.exit_alternate()
-
-
-vis = Visualizer()
-vis.read("output_maze.txt")
-vis.render()

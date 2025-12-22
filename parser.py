@@ -3,16 +3,11 @@ Parser for the maze
 """
 
 
-class Point:
-    """
-    2D Point class (x, y)
-    """
-    def __init__(self, x, y) -> None:
-        self.x = x
-        self.y = y
+from os import PathLike
+from typing import Union
 
 
-def parse_config(file: str) -> dict[str, int | Point | str]:
+class ConfigParser:
     """
     Parser for the configuration file. The file must contain WIDTH, HEIGHT,
     ENTRY, EXIT, OUTPUT_FILE, PERFECT
@@ -22,40 +17,33 @@ def parse_config(file: str) -> dict[str, int | Point | str]:
     :return: Returns a dictionary of either int or txt or of a Point class
     :rtype: dict[str, int | Point | str]
     """
-    config = {}
-    with open(file, "r") as fp:
-        data = fp.read()
-    for line in data.split("\n"):
-        if line == "":
-            continue
-        key, val = line.split("=")
-        if "," in val:
-            x, y = [int(v) for v in val.split(",")]
-            config[key] = Point(x, y)
-        elif "." in val:
-            config[key] = val
-        elif "True" in val:
-            config[key] = True
-        elif "False" in val:
-            config[key] = False
-        else:
-            config[key] = int(val)
-    mandatory_keys = {
-        "WIDTH",
-        "HEIGHT",
-        "ENTRY",
-        "EXIT",
-        "OUTPUT_FILE",
-        "PERFECT",
-    }
-    if len(set(config.keys()).intersection(mandatory_keys)) < 6:
-        raise KeyError("Missing mandatory keys")
-    return config
 
+    def __init__(self) -> None:
+        self.width: None | int = None
+        self.height: None | int = None
+        self.entry: None | tuple[int, int] = None
+        self.exit: None | tuple[int, int] = None
+        self.output_file: Union[str, PathLike] = ""
+        self.perfect: None | bool = None
 
-def print_config(config: dict[str, int | Point | str]):
-    for key, val in config.items():
-        if isinstance(val, Point):
-            print(f"{key} = {val.x}, {val.y}")
-        else:
-            print(f"{key} = {val}")
+    def parse(self, file):
+        with open(file, "r") as fp:
+            data = fp.read()
+        for line in data.split("\n"):
+            if line == "":
+                continue
+            key, val = line.split("=")
+            if key == "WIDTH":
+                self.width = int(val)
+            if key == "HEIGHT":
+                self.height = int(val)
+            if key == "ENTRY":
+                x, y = map(int, val.split(","))
+                self.entry = (x, y)
+            if key == "EXIT":
+                x, y = map(int, val.split(","))
+                self.exit = (x, y)
+            if key == "OUTPUT_FILE":
+                self.output_file = val
+            if key == "PERFECT":
+                self.perfect = True if val == "True" else False
