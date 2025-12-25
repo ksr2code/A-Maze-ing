@@ -30,7 +30,7 @@ class Cell:
         return format(self.walls, 'X')
 
 
-class ImperfectMazeGenerator:
+class HaKMazeGenerator:
     """Hunt-and-Kill algorithm for imperfect maze generation."""
 
     def __init__(self, config: ConfigParser) -> None:
@@ -165,11 +165,7 @@ class ImperfectMazeGenerator:
                     return False
         return True
 
-    def get_cell(self, x: int, y: int) -> Cell:
-        """Get cell at coordinates."""
-        return self.grid[y][x]
-
-    def export_ouput(self) -> None:
+    def save(self) -> None:
         """Convert maze to hexadecimal and export to output file."""
         lines = []
         for row in self.grid:
