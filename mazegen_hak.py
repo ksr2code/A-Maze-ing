@@ -81,7 +81,7 @@ class HaKMazeGenerator:
                 if y < self.height - 1 and cell.has_wall(Cell.SOUTH):
                     removable_walls.append(
                         (cell, self.grid[y + 1][x], Cell.SOUTH))
-        num_to_remove = int(len(removable_walls) * 0.1)
+        num_to_remove = int(len(removable_walls) * 0.05)
         walls_to_remove = sample(removable_walls, num_to_remove)
         for cell1, cell2, direction in walls_to_remove:
             cell1.remove_wall(direction)
