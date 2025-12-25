@@ -24,11 +24,10 @@ def a_maze_ing(argv: list[str]):
     config = ConfigParser()
     try:
         config.parse(config_file)
-        if config.algorithm == "HaK":
+        if config.algo == "hak" or config.perfect == False:
             maze = HaKMazeGenerator(config)
         else:
-            maze = MazeGenerator()
-            maze.parse(config)
+            maze = MazeGenerator(config)
         maze.generate()
         maze.save()
         path = PathFinder(config.output_file)
