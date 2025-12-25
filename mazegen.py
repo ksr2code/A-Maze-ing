@@ -60,6 +60,7 @@ class MazeGenerator:
         #   - Kruskal
         #   - Wilson
         #   - Aldons-Broder
+        #   - https://www.youtube.com/watch?v=ioUl1M77hww
 
     def save(self):
         assert self._width is not None
