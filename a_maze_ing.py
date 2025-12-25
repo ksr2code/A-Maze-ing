@@ -6,11 +6,12 @@ Main module
 from sys import argv, exit
 from parser import ConfigParser, ParsingError
 from visualizer import Visualizer
+from mazegen import MazeGenerator
 
 
 def a_maze_ing(argv: list[str]):
     """Run maze generator and visualizer.
-    
+
     Args:
         config_file: Path to configuration file.
     """
@@ -23,6 +24,7 @@ def a_maze_ing(argv: list[str]):
         parser.parse(config_file)
     except FileNotFoundError as e:
         print(f"Error: Configuration file not found: {config_file}")
+        print(e)
         exit(1)
     except ParsingError as e:
         print(f"Configuration Error: {e}")
@@ -33,6 +35,11 @@ def a_maze_ing(argv: list[str]):
     except Exception as e:
         print(f"Unexpected error: {e}")
         exit(1)
+
+    maze = MazeGenerator()
+    maze.parse(parser)
+    maze.generate()
+    maze.save()
 
     vis = Visualizer()
     vis.read(parser.output_file)
