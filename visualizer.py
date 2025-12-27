@@ -453,11 +453,14 @@ class Visualizer:
                             cursor.clear_line()
                             cursor.show()
                             Visualizer.Keyboard.disable_raw_mode(mode)
-                            new_seed = input("Enter seed: ")
-                            if new_seed == "":
-                                new_seed_value = None
-                            else:
-                                new_seed_value = int(new_seed)
+                            while True:
+                                new_seed = input("Enter seed or press 'Enter' for seed=None: ")
+                                if new_seed == "":
+                                    new_seed_value = None
+                                    break
+                                elif new_seed.isdigit():
+                                    new_seed_value = int(new_seed)
+                                    break
                             return True, new_seed_value
                         case "c" if menu_type == "Main":
                             menu_type = "Color"
