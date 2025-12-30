@@ -20,6 +20,8 @@ def a_maze_ing(argv: list[str]) -> None:
     try:
         maze = MazeGenerator()
         maze.read()
+        assert maze._output is not None
+        assert maze._seed is not None
         regenerate = True
         while regenerate:
             maze.generate()
