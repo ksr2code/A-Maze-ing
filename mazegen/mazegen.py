@@ -16,11 +16,71 @@ class MazeGenerator:
         self._seed: int | None = None
         self._algorithm: str | None = None
 
+    @property
+    def grid(self):
+        return self._grid
+
+    @grid.setter
+    def grid(self, grid: list[list[int]]):
+        self._grid = grid
+
+    @property
+    def output(self):
+        return self._output
+
+    @output.setter
+    def output(self, file: Union[str, PathLike[str]]):
+        self.output = file
+
+    @property
+    def width(self):
+        return self._width
+
+    @width.setter
+    def width(self, width: int):
+        self._width = width
+
+    @property
+    def height(self):
+        return self._height
+
+    @height.setter
+    def height(self, height: int):
+        self._height = height
+
+    @property
+    def entry(self):
+        return self._entry
+
+    @entry.setter
+    def entry(sefl, entry: tuple[int, int]):
+        sefl._entry = entry
+
+    @property
+    def exit(self):
+        return self._exit
+
+    @property
+    def seed(self):
+        return self._seed
+
+    @seed.setter
+    def seed(self, seed: int):
+        self._seed = seed
+
+    @property
+    def algorithm(self):
+        return self._algorithm
+
+    @algorithm.setter
+    def algorithm(self, algorithm: str):
+        self._algorithm = algorithm
+
     def read(self, file: Union[str, PathLike[str]] = "config.txt") -> None:
         """
         Reads the configuration file. By default the file is config.txt.
         The file must contain WIDTH, HEIGHT, ENTRY, EXIT, OUTPUT_FILE, PERFECT
-        The file can also containg SEED and ALGORITHM = [dfs | hak]
+        The file can also contain optional SEED and ALGORITHM = [dfs | hak]
 
         :param self: Reference to class instance
         :param file: The target configuration file (config.txt by default)
@@ -149,7 +209,7 @@ class MazeGenerator:
             case "hak":
                 hak(self)
             case _:
-                raise ValueError("Unknown algorithm")
+                dfs(self)
 
     def reset(self):
         assert self._width is not None

@@ -20,16 +20,16 @@ def a_maze_ing(argv: list[str]) -> None:
     try:
         maze = MazeGenerator()
         maze.read()
-        assert maze._output is not None
-        assert maze._seed is not None
+        assert maze.output is not None
+        assert maze.seed is not None
         regenerate = True
         while regenerate:
             maze.generate()
             maze.write()
-            path = PathFinder(maze._output)
+            path = PathFinder(maze.output)
             path.save_path()
             vis = Visualizer()
-            vis.read(maze._output)
+            vis.read(maze.output)
             regenerate, maze._seed = vis.render()
             maze.reset()
     except Exception as e:

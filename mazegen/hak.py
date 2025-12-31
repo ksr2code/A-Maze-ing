@@ -9,20 +9,20 @@ def hak(maze) -> None:
     - Hunt phase: scan for an unvisited cell next to a visited one
     """
 
-    assert maze._grid is not None
-    assert maze._width is not None
-    assert maze._height is not None
-    assert maze._entry is not None
+    assert maze.grid is not None
+    assert maze.width is not None
+    assert maze.height is not None
+    assert maze.entry is not None
 
-    seed(maze._seed)
-    width = maze._width
-    height = maze._height
-    grid = maze._grid
+    seed(maze.seed)
+    width = maze.width
+    height = maze.height
+    grid = maze.grid
     visited = set()
     DIRS = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-    OPP = [2, 3, 0, 1]  # opposite wall index
+    OPP = [2, 3, 0, 1]
 
-    cx, cy = maze._entry
+    cx, cy = maze.entry
     visited.add((cx, cy))
 
     def kill(x, y):
