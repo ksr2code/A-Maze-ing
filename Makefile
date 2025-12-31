@@ -20,6 +20,13 @@ install:
 		echo "\tuv found at $(UV)"; \
 	fi
 
+	@echo " - Checking for python dependencies"
+	@if [ ! -f mazegen*.whl ]; then \
+		echo "Missing mazegen wheel file..."; \
+		echo "Run make build"; \
+		exit 1; \
+	fi
+
 	@echo " - Checking for python"
 	@if [ -z "$(PYTHON)" ]; then \
 		uv python install 3.11; \
@@ -47,6 +54,34 @@ build:
 	uv build
 	mv $(WHEEL) .
 	rm -rf dist
+
+config:
+	@tmp=$$(mktemp); \
+	base=$$(mktemp); \
+	if [ -f config.txt ]; then \
+		cp config.txt $$tmp; \
+		cp config.txt $$base; \
+	else \
+		echo "# This file is read by a_maze_ing.py" > $$tmp; \
+		echo "WIDTH=25"        >> $$tmp; \
+		echo "HEIGHT=25"       >> $$tmp; \
+		echo "ENTRY=0,0"       >> $$tmp; \
+		echo "EXIT=19,14"      >> $$tmp; \
+		echo "OUTPUT_FILE=out.txt" >> $$tmp; \
+		echo "PERFECT=True"    >> $$tmp; \
+		echo >> $$tmp; \
+		echo "# The flags below are optional" >> $$tmp; \
+		echo "# SEED=42"       >> $$tmp; \
+		echo "# ALGORITHM=dfs" >> $$tmp; \
+	fi; \
+	$${EDITOR:-nano} $$tmp; \
+	if cmp -s $$tmp $$base; then \
+		echo "No changes detected. Configuration not updated."; \
+	else \
+		cp $$tmp config.txt; \
+		echo "Configuration updated and saved to config.txt"; \
+	fi; \
+	rm $$tmp
 
 run:
 	@if [ ! -d .venv ]; then \
@@ -109,6 +144,7 @@ help:
 	@echo "  install        Install dependencies and set up the virtual environment"
 	@echo "  uninstall      Removes all Python versions and dependencies newly installed"
 	@echo "  build          Compiles the wheel file"
+	@echo "  config         Set a config.txt file for the maze generation"
 	@echo "  run            Run the application"
 	@echo "  lint           Run flake8 and mypy"
 	@echo "  lint-strict    Run strict mypy checks"

@@ -453,8 +453,9 @@ class Visualizer:
                             cursor.clear_line()
                             cursor.show()
                             Visualizer.Keyboard.disable_raw_mode(mode)
+                            seed_msg = "Enter seed or press 'Enter' for None: "
                             while True:
-                                new_seed = input("Enter seed or press 'Enter'")
+                                new_seed = input(seed_msg)
                                 if new_seed == "":
                                     new_seed_value = None
                                     break

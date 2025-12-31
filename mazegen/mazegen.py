@@ -65,7 +65,7 @@ class MazeGenerator:
         return self._seed
 
     @seed.setter
-    def seed(self, seed: int):
+    def seed(self, seed: int | None = None):
         self._seed = seed
 
     @property

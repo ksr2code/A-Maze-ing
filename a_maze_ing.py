@@ -21,7 +21,6 @@ def a_maze_ing(argv: list[str]) -> None:
         maze = MazeGenerator()
         maze.read()
         assert maze.output is not None
-        assert maze.seed is not None
         regenerate = True
         while regenerate:
             maze.generate()
@@ -30,7 +29,7 @@ def a_maze_ing(argv: list[str]) -> None:
             path.save_path()
             vis = Visualizer()
             vis.read(maze.output)
-            regenerate, maze._seed = vis.render()
+            regenerate, maze.seed = vis.render()
             maze.reset()
     except Exception as e:
         print(f"Unexpected error: {e}")
