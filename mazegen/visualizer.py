@@ -332,7 +332,7 @@ class Visualizer:
         view_h = max(1, term.height - 3)
 
         def clamp_offsets() -> None:
-            nonlocal off_x, off_y, view_w, view_h
+            nonlocal off_x, off_y
             out_h = len(out)
             out_w = len(out[0]) if out else 0
             max_off_x = max(0, out_w - view_w)
