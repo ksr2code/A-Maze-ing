@@ -145,4 +145,4 @@ class PathFinder:
 
         if path is not None:
             with open(self.output_file, "a") as f:
-                f.write(path)
+                f.write(path + "\n")

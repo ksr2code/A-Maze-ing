@@ -20,7 +20,7 @@ def a_maze_ing(argv: list[str]) -> None:
         exit(1)
     try:
         maze = MazeGenerator()
-        maze.read()
+        maze.read(argv[1])
         assert maze.output is not None
         regenerate = True
         while regenerate:
