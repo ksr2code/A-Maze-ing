@@ -439,7 +439,9 @@ class Visualizer:
                     _logo()
                     if self.width <= 18 or self.height <= 18:
                         cursor.move_to(0, term.height - 3)
-                        stdout.write("Info: Maze too small for the 42 pattern")
+                        Graphics.set(Graphics.Color.Yellow)
+                        stdout.write("⚠️ Info: Maze too small for the 42 pattern")
+                        Graphics.reset()
                     cursor.move_to(0, term.height - 2)
                     stdout.write("─" * term.width)
                     for item in menu[menu_type]:
