@@ -1,6 +1,6 @@
 .PHONY: install uninstall build run debug clean lint lint-strict
 
-PYTHON := $(shell command -v python3 2>/dev/null)
+PYTHON := $(shell command -v python3.11 2>/dev/null)
 UV := $(shell command -v uv 2>/dev/null)
 ARGS := $(wordlist 2, 999, $(MAKECMDGOALS))
 OUTPUT_FILE := $(shell grep -i output_file config.txt | cut -d= -f2 | xargs)
@@ -32,7 +32,6 @@ install:
 		uv python install 3.11; \
 	else \
 		echo "\tpython3 found at $(PYTHON)"; \
-		uv sync --python 3.11; \
 	fi
 
 	@echo "Configuring venv"
@@ -51,9 +50,25 @@ uninstall:
 	rm -rf ~/.local/bin/uv ~/.local/bin/uvx
 
 build:
+	@if [ ! -f pyproject.toml ]; then \
+		touch pyproject.toml; \
+		echo "[project]" >> pyproject.toml; \
+		echo 'name = "mazegen"' >> pyproject.toml; \
+		echo 'version = "1.0.0"' >> pyproject.toml; \
+		echo 'description = "Maze generation library"' >> pyproject.toml; \
+		echo 'readme = "mazegen/README.md"' >> pyproject.toml; \
+		echo 'requires-python = ">=3.11"' >> pyproject.toml; \
+		echo 'dependencies = []' >> pyproject.toml; \
+		echo >> pyproject.toml; \
+		echo "[tool.setuptools]" >> pyproject.toml; \
+		echo 'packages = ["mazegen"]' >> pyproject.toml; \
+		echo "[tool.setuptools.package-data]" >> pyproject.toml; \
+		echo 'mazegen = ["README.md"]' >> pyproject.toml; \
+	fi
 	uv build
 	mv $(WHEEL) .
 	rm -rf dist
+	$(MAKE) clean
 
 config:
 	@tmp=$$(mktemp); \
@@ -112,6 +127,7 @@ clean:
 		echo rm -f "$(OUTPUT_FILE)"; \
 		rm -f "$(OUTPUT_FILE)"; \
 	fi
+	rm -f pyproject.toml
 
 fclean: clean
 	rm -rf .venv

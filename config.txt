@@ -1,6 +1,6 @@
 # This file is read by a_maze_ing.py
-WIDTH=25
-HEIGHT=25
+WIDTH=100
+HEIGHT=100
 ENTRY=0,0
 EXIT=19,14
 OUTPUT_FILE=out.txt
