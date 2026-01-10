@@ -130,7 +130,7 @@ class MazeGenerator:
                 key, val = map(str.strip, line.split("=", 1))
                 key = key.lower()
 
-                if val.strip("-").isdigit():
+                if key != "perfect" and val.strip("-").isdigit():
                     iv = int(val)
                     if iv < 0:
                         raise ValueError(f"{key} must be non-negative")
@@ -165,6 +165,9 @@ class MazeGenerator:
         if missing:
             msg = ", ".join(m.upper() for m in missing)
             raise KeyError(f"Missing keys: {msg}")
+
+        if not isinstance(raw["perfect"], bool):
+            raise ValueError("PERFECT key must be boolean")
 
         try:
             config: Config = {
